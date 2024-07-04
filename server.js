@@ -103,19 +103,25 @@ const Address = mongoose.model('Address', addressSchema);
 // const Book = require('./models/Book'); // Adjust the path as per your file structure
 
 // Update book details
-// Update book details
 app.put('/books/:id', async (req, res) => {
   try {
-      const bookId = req.params.id;
-      // Logic to update the book in the database based on bookId and req.body
-      // Example:
-      const updatedBook = await Book.findByIdAndUpdate(bookId, req.body, { new: true });
-      res.json(updatedBook);
+      const { id } = req.params;
+      console.log(`Received request to update book with ID: ${id}`);
+      console.log(`Request Body:`, req.body);
+      
+      const updatedBook = await Book.findByIdAndUpdate(id, req.body, { new: true });
+      if (!updatedBook) {
+          return res.status(404).send({ message: 'Book not found' });
+      }
+      res.status(200).send(updatedBook);
   } catch (error) {
-      console.error('Error updating book:', error);
-      res.status(500).json({ message: 'Failed to update book' });
+      res.status(500).send({ message: 'Error updating book', error });
   }
 });
+
+
+
+
 
 
 
@@ -776,11 +782,11 @@ app.get('/users/inactive', async (req, res) => {
 
 // Create a new address
 app.post('/address', async (req, res) => {
-  const { street,landmark, city, state, postalCode, country } = req.body;
+  const { street, landmark, city, state, postalCode, country } = req.body;
   const userId = req.body.userId || req.query.userId; // User ID from request body or query parameter
 
   try {
-    const address = new Address({ userId, street,landmark, city, state, postalCode, country });
+    const address = new Address({ userId, street, landmark, city, state, postalCode, country });
     await address.save();
     res.status(201).json({ message: 'Address created successfully', address });
   } catch (error) {
@@ -824,12 +830,12 @@ app.delete('/address/:id', async (req, res) => {
 // Edit an address by ID
 app.put('/address/:id', async (req, res) => {
   const { id } = req.params;
-  const { street,landmark, city, state, postalCode, country } = req.body;
+  const { street, landmark, city, state, postalCode, country } = req.body;
 
   try {
     const address = await Address.findByIdAndUpdate(
       id,
-      { street,landmark, city, state, postalCode, country },
+      { street, landmark, city, state, postalCode, country },
       { new: true, runValidators: true }
     );
 
