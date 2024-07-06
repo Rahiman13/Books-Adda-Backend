@@ -743,40 +743,40 @@ app.get('/users/inactive', async (req, res) => {
 
 
 // Fetch all users' purchase details
-// app.get('/users/purchase', async (req, res) => {
-//   try {
-//     const purchases = await Purchase.find().populate('userId', 'username email');
+app.get('/users/purchase', async (req, res) => {
+  try {
+    const purchases = await Purchase.find().populate('userId', 'username email');
 
-//     const purchaseDetails = purchases.reduce((acc, purchase) => {
-//       const userId = purchase.userId._id.toString();
-//       if (!acc[userId]) {
-//         acc[userId] = {
-//           userId: purchase.userId._id,
-//           username: purchase.userId.username,
-//           email: purchase.userId.email,
-//           purchases: []
-//         };
-//       }
+    const purchaseDetails = purchases.reduce((acc, purchase) => {
+      const userId = purchase.userId._id.toString();
+      if (!acc[userId]) {
+        acc[userId] = {
+          userId: purchase.userId._id,
+          username: purchase.userId.username,
+          email: purchase.userId.email,
+          purchases: []
+        };
+      }
 
-//       acc[userId].purchases.push({
-//         bookTitle: purchase.bookTitle,
-//         bookimageUrl: purchase.bookimageUrl,
-//         author: purchase.author,
-//         price: purchase.price,
-//         quantity: purchase.quantity,
-//         totalPrice: purchase.totalPrice,
-//         purchasedDate: purchase.purchasedDate
-//       });
+      acc[userId].purchases.push({
+        bookTitle: purchase.bookTitle,
+        bookimageUrl: purchase.bookimageUrl,
+        author: purchase.author,
+        price: purchase.price,
+        quantity: purchase.quantity,
+        totalPrice: purchase.totalPrice,
+        purchasedDate: purchase.purchasedDate
+      });
 
-//       return acc;
-//     }, {});
+      return acc;
+    }, {});
 
-//     res.status(200).json(Object.values(purchaseDetails));
-//   } catch (error) {
-//     console.error('Error fetching purchase details:', error);
-//     res.status(500).json({ error: 'Internal server error' });
-//   }
-// });
+    res.status(200).json(Object.values(purchaseDetails));
+  } catch (error) {
+    console.error('Error fetching purchase details:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 
 
